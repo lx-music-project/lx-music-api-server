@@ -1,1 +1,0 @@
-cmd_Release/better_sqlite3.node := ln -f "Release/obj.target/better_sqlite3.node" "Release/better_sqlite3.node" 2>/dev/null || (rm -rf "Release/better_sqlite3.node" && cp -af "Release/obj.target/better_sqlite3.node" "Release/better_sqlite3.node")
