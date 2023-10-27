@@ -1,0 +1,107 @@
+{
+  "common": {
+    "host": "0.0.0.0",
+    "_host-desc": "服务器启动时所使用的HOST地址",
+    "port": "9763",
+    "_port_desc": "服务器启动时所使用的端口"
+  },
+  "security": {
+    "whitelist_host": [
+      "localhost",
+      "0.0.0.0",
+      "127.0.0.1"
+    ],
+    "_whitelist_host-desc": "强制白名单HOST，不需要加端口号（即不受其他安全设置影响的HOST）",
+    "check_lxm": true,
+    "_check_lxm-desc": "是否检查lxm请求头（正常的LX Music请求时都会携带这个请求头）",
+    "lxm_ban": true,
+    "_lxm_ban-desc": "lxm请求头不存在或不匹配时是否将用户IP加入黑名单",
+    "allowed_host": {
+      "desc": "HOST允许列表，启用后只允许列表内的HOST访问服务器，不需要加端口号",
+      "enable": false,
+      "blacklist": {
+        "desc": "当用户访问的HOST并不在允许列表中时是否将请求IP加入黑名单，长度单位：秒",
+        "enable": false,
+        "length": 0
+      },
+      "list": [
+        "localhost",
+        "0.0.0.0",
+        "127.0.0.1"
+      ]
+    },
+    "blacklist": {
+      "desc": "是否启用黑名单（全局设置，关闭后已存储的值并不受影响，但不会再检查）",
+      "enable": true,
+      "expire": {
+        "desc": "是否启用黑名单IP过期（关闭后其他地方的配置会失效）",
+        "enable": true,
+        "length": 604800
+      }
+    }
+  },
+  "module": {
+    "kg": {
+      "desc": "酷狗音乐相关配置",
+      "client": {
+        "desc": "客户端请求配置，不懂请保持默认，修改请统一为字符串格式",
+        "appid": "1005",
+        "_appid-desc": "酷狗音乐的appid，官方安卓为1005，官方PC为1001",
+        "signatureKey": "OIlwieks28dk2k092lksi2UIkp",
+        "_signatureKey": "客户端signature采用的key值，需要与appid对应",
+        "clientver": "12029",
+        "_clientver-desc": "客户端versioncode，pidversionsecret可能随此值而变化",
+        "pidversionsecret": "57ae12eb6890223e355ccfcb74edf70d",
+        "_pidversionsecret-desc": "获取URL时所用的key值计算验证值"
+      },
+      "tracker": {
+        "desc": "trackerapi请求配置，不懂请保持默认，修改请统一为字符串格式",
+        "host": "https://gateway.kugou.com",
+        "path": "/v5/url",
+        "version": "v5",
+        "x-router": {
+          "desc": "当host为gateway.kugou.com时需要追加此头，为tracker类地址时则不需要",
+          "enable": true,
+          "value": "tracker.kugou.com"
+        },
+        "extra_params": {},
+        "_extra_params-desc": "自定义添加的param，优先级大于默认，填写类型为普通的JSON数据，会自动转换为请求param"
+      },
+      "user": {
+        "desc": "此处内容请统一抓包获取，需要vip账号来获取会员歌曲，如果没有请留为空值，mid必填，可以瞎填一段数字",
+        "token": "",
+        "userid": "",
+        "mid": "114514"
+      }
+    },
+    "tx": {
+      "desc": "QQ音乐相关配置",
+      "vkeyserver": {
+        "desc": "请求官方api时使用的guid，uin等信息，不需要与cookie中信息一致",
+        "guid": "114514",
+        "uin": "10086"
+      },
+      "user": {
+        "desc": "用户数据，可以通过浏览器获取，需要vip账号来获取会员歌曲，如果没有请留为空值，cookie填写方式与请求头保持一致，不支持载入cookies.txt，请自己转换",
+        "cookie": "",
+        "uin": "",
+        "_uin-desc": "cookie对应的QQ号"
+      }
+    },
+    "wy": {
+      "desc": "网易云音乐相关配置",
+      "user": {
+        "desc": "账号cookie数据，可以通过浏览器获取，需要vip账号来获取会员歌曲，如果没有请留为空值",
+        "cookie": ""
+      }
+    },
+    "mg": {
+      "desc": "咪咕音乐相关配置",
+      "user": {
+        "desc": "研究不深，后两项自行抓包获取",
+        "aversionid": "",
+        "token": ""
+      }
+    }
+  }
+}
