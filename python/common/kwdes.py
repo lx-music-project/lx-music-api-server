@@ -1,3 +1,19 @@
+# ----------------------------------------
+# - mode: python - 
+# - author: helloplhm-qwq - 
+# - name: kwdes.py - 
+# - project: lx-music-api-server - 
+# - license: MIT - 
+# ----------------------------------------
+# This file is part of the "lx-music-api-server" project.
+# Do not edit except you know what you are doing.
+
+# KuwoDES加密实现，CV过来的，不进行注释
+# 下方为原文件版权声明，在此进行保留
+# Copyright (C) 2014 LiuLang <gsushzhsosgsu@gmail.com>
+# Use of this source code is governed by GPLv3 license that can be found
+# in http://www.gnu.org/licenses/gpl-3.0.html
+
 import base64
 
 DES_MODE_DECRYPT = 1

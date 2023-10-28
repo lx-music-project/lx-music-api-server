@@ -1,8 +1,20 @@
-import re
+# ----------------------------------------
+# - mode: python - 
+# - author: helloplhm-qwq - 
+# - name: utils.py - 
+# - project: lx-music-api-server - 
+# - license: MIT - 
+# ----------------------------------------
+# This file is part of the "lx-music-api-server" project.
+# Do not edit except you know what you are doing.
+
 import platform
-import base64
-from hashlib import md5 as _md5
 import binascii
+import base64
+import zlib
+import re
+import ujson as json
+from hashlib import md5 as _md5
 
 def to_base64(data_bytes):
     encoded_data = base64.b64encode(data_bytes)
@@ -11,6 +23,19 @@ def to_base64(data_bytes):
 def to_hex(data_bytes):
     hex_encoded = binascii.hexlify(data_bytes)
     return hex_encoded.decode('utf-8')
+
+def from_base64(data):
+    decoded_data = base64.b64decode(data)
+    return decoded_data
+
+def from_hex(data):
+    decoded_data = binascii.unhexlify(data.decode('utf-8'))
+    return decoded_data
+
+def inflate_raw_sync(data):
+    decompress_obj = zlib.decompressobj(-zlib.MAX_WBITS)
+    decompressed_data = decompress_obj.decompress(data) + decompress_obj.flush()
+    return decompressed_data
 
 def require(module):
     index = 0
@@ -57,3 +82,6 @@ def unique_list(list_in):
     unique_list = []
     [unique_list.append(x) for x in list_in if x not in unique_list]
     return unique_list
+
+def format_dict_json(dic):
+    return json.dumps(dic, indent=2, ensure_ascii=False)

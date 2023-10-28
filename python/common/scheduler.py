@@ -1,5 +1,16 @@
+# ----------------------------------------
+# - mode: python - 
+# - author: helloplhm-qwq - 
+# - name: scheduler.py - 
+# - project: lx-music-api-server - 
+# - license: MIT - 
+# ----------------------------------------
+# This file is part of the "lx-music-api-server" project.
+# Do not edit except you know what you are doing.
+
+# 一个简单的循环任务调度器
+
 import time
-import traceback
 import threading
 from .variable import running
 from . import log

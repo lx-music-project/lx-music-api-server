@@ -1,3 +1,13 @@
+# ----------------------------------------
+# - mode: python - 
+# - author: helloplhm-qwq - 
+# - name: log.py - 
+# - project: lx-music-api-server - 
+# - license: MIT - 
+# ----------------------------------------
+# This file is part of the "lx-music-api-server" project.
+# Do not edit except you know what you are doing.
+
 import logging
 import colorlog
 import os
@@ -10,6 +20,7 @@ except:
     pass
 
 class flaskLogHelper(logging.Handler):
+    # werkzeug日志转接器
     def __init__(self, custom_logger):
         super().__init__()
         self.custom_logger = custom_logger
@@ -20,6 +31,7 @@ class flaskLogHelper(logging.Handler):
         self.custom_logger.info(log_message)
 
 class log:
+    # 主类
     def __init__(self, module_name = 'Not named logger', output_level = 'INFO', filename = ''):
         self._logger = logging.getLogger(module_name)
         if not output_level.upper() in dir(logging):
@@ -70,7 +82,6 @@ class log:
                 else:
                     self._logger.info(m)
             return
-        #print(self.module_name == "werkzeug")
         if len(str(message)) > log_length_limit and allow_hidden:
             message = str(message)[:log_length_limit] + "..."
         self._logger.debug(message)
@@ -83,7 +94,6 @@ class log:
                 else:
                     self._logger.info(m)
             return
-        #print(self.module_name == "werkzeug")
         if len(str(message)) > log_length_limit and allow_hidden:
             message = str(message)[:log_length_limit] + "..."
         self._logger.info(message)
@@ -96,7 +106,6 @@ class log:
                 else:
                     self._logger.info(m)
             return
-        #print(self.module_name == "werkzeug")
         if len(str(message)) > log_length_limit and allow_hidden:
             message = str(message)[:log_length_limit] + "..."
         self._logger.info(message)
