@@ -14,6 +14,7 @@ import base64
 import zlib
 import re
 import ujson as json
+from urllib.parse import quote
 from hashlib import md5 as _md5
 
 def to_base64(data_bytes):
@@ -85,3 +86,41 @@ def unique_list(list_in):
 
 def format_dict_json(dic):
     return json.dumps(dic, indent=2, ensure_ascii=False)
+
+def encodeURIComponent(component):
+    return quote(component)
+
+def sort_dict(dictionary):
+    sorted_items = sorted(dictionary.items())
+    sorted_dict = {k: v for k, v in sorted_items}
+    return sorted_dict
+
+def merge_dict(dict1, dict2):
+    merged_dict = dict2.copy()
+    merged_dict.update(dict1)
+    return merged_dict
+
+class object(dict):
+    def __init__(self, d):
+        super().__init__(d)
+        self._raw = d
+        for key, value in d.items():
+            if isinstance(value, dict):
+                setattr(self, key, object(value))
+            else:
+                setattr(self, key, value)
+
+    def __setattr__(self, key, value):
+        super().__setattr__(key, value)
+        if key != "_raw":
+            self._raw[key] = value
+
+    def to_dict(self):
+        result = {}
+        for key, value in self.items():
+            if isinstance(value, object):
+                result[key] = value.to_dict()
+            else:
+                result[key] = value
+        return result
+

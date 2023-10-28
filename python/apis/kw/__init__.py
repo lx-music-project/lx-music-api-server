@@ -1,7 +1,7 @@
 # ----------------------------------------
 # - mode: python - 
 # - author: helloplhm-qwq - 
-# - name: main.py - 
+# - name: __init__.py - 
 # - project: lx-music-api-server - 
 # - license: MIT - 
 # ----------------------------------------
@@ -23,7 +23,7 @@ tools = {
 }
 }
 
-def url(songId, quality):
+async def url(songId, quality):
     target_url = f'''https://bd-api.kuwo.cn/api/service/music/downloadInfo/{songId}?isMv=0&format={tools['extMap'][quality]}&br={tools['qualityMap'][quality]}&level='''
     req = Httpx.request(target_url, {
         'method': 'GET',

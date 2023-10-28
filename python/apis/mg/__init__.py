@@ -1,7 +1,7 @@
 # ----------------------------------------
 # - mode: python - 
 # - author: helloplhm-qwq - 
-# - name: main.py - 
+# - name: __init__.py - 
 # - project: lx-music-api-server - 
 # - license: MIT - 
 # ----------------------------------------
@@ -26,7 +26,7 @@ tools = {
     'osversion': config.read_config('module.mg.user.osversion'),
 }
 
-def url(songId, quality):
+async def url(songId, quality):
     req = Httpx.request(tools['url'].replace('__quality__', tools['qualityMap'][quality]).replace('__songId__', songId), {
         'method': 'GET',
         'headers': {

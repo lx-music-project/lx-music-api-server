@@ -1,7 +1,7 @@
 # ----------------------------------------
 # - mode: python - 
 # - author: helloplhm-qwq - 
-# - name: main.py - 
+# - name: __init__.py - 
 # - project: lx-music-api-server - 
 # - license: MIT - 
 # ----------------------------------------
@@ -14,7 +14,7 @@ from . import kw
 from . import mg
 
 
-def SongURL(source, songId, quality):
+async def SongURL(source, songId, quality):
     func = require('apis.' + source).url
     try:
         return {
