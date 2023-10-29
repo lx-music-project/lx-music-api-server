@@ -17,7 +17,26 @@ import sqlite3
 from .utils import unique_list, readfile
 from . import variable
 from .log import log
-from dbutils.pooled_db import PooledDB
+# from dbutils.pooled_db import PooledDB
+import threading
+
+# 创建线程本地存储对象
+local_data = threading.local()
+
+def get_data_connection():
+    # 检查线程本地存储对象是否存在连接对象，如果不存在则创建一个新的连接对象
+    if not hasattr(local_data, 'connection'):
+        local_data.connection = sqlite3.connect('data.db')
+    return local_data.connection
+
+# 创建线程本地存储对象
+local_cache = threading.local()
+
+def get_cache_connection():
+    # 检查线程本地存储对象是否存在连接对象，如果不存在则创建一个新的连接对象
+    if not hasattr(local_cache, 'connection'):
+        local_cache.connection = sqlite3.connect('cache.db')
+    return local_cache.connection
 
 logger = log('config_manager')
 
@@ -110,10 +129,10 @@ default = {
                 "uin": "10086",
             },
             "user": {
-                "desc": "用户数据，可以通过浏览器获取，需要vip账号来获取会员歌曲，如果没有请留为空值，cookie填写方式与请求头保持一致，不支持载入cookies.txt，请自己转换",
-                "cookie": "",
+                "desc": "用户数据，可以通过浏览器获取，需要vip账号来获取会员歌曲，如果没有请留为空值，qqmusic_key可以从Cookie中/客户端的请求体中（comm.authst）获取",
+                "qqmusic_key": "",
                 "uin": "",
-                "_uin-desc": "cookie对应的QQ号",
+                "_uin-desc": "key对应的QQ号"
             }
         },
         "wy": {
@@ -126,11 +145,11 @@ default = {
         "mg": {
             "desc": "咪咕音乐相关配置",
             "user": {
-                "desc": "研究不深，后两项自行抓包获取",
+                "desc": "研究不深，后两项自行抓包获取，在header里",
                 "aversionid": "",
                 "token": "",
                 "osversion": "10",
-                "useragent": "Mozilla",
+                "useragent": "Mozilla / 5.0 (Windows NT 10.0; Win64; x64) AppleWebKit / 537.36 (KHTML, like Gecko) Chrome / 89.0.4389.82 Safari / 537.36",
             },
         },
     },
@@ -143,17 +162,20 @@ def handle_default_config():
                 escape_forward_slashes=False))
         f.close()
         logger.info('首次启动或配置文件被删除，已创建默认配置文件')
-        logger.info(f'\n请到{variable.workdir + os.path.sep}config.json修改配置后重新启动服务器')
+        logger.info(
+            f'\n请到{variable.workdir + os.path.sep}config.json修改配置后重新启动服务器')
         sys.exit(0)
+
 
 class ConfigReadException(Exception):
     pass
+
 
 def load_data():
     config_data = {}
     try:
         # Connect to the database
-        conn = variable.pool_data.connection()
+        conn = get_data_connection()
         cursor = conn.cursor()
 
         # Retrieve all configuration data from the 'config' table
@@ -167,9 +189,6 @@ def load_data():
     except Exception as e:
         logger.error(f"Error loading config: {str(e)}")
         logger.error(traceback.format_exc())
-    finally:
-        if conn:
-            conn.close()
 
     return config_data
 
@@ -177,7 +196,7 @@ def load_data():
 def save_data(config_data):
     try:
         # Connect to the database
-        conn = variable.pool_data.connection()
+        conn = get_data_connection()
         cursor = conn.cursor()
 
         # Clear existing data in the 'data' table
@@ -193,41 +212,36 @@ def save_data(config_data):
     except Exception as e:
         logger.error(f"Error saving config: {str(e)}")
         logger.error(traceback.format_exc())
-    finally:
-        if conn:
-            conn.close()
 
 
-def getCache(source, data):
+def getCache(module, key):
     try:
         # 连接到数据库（如果数据库不存在，则会自动创建）
-        conn = variable.pool_cache.connection()
+        conn = get_cache_connection()
 
         # 创建一个游标对象
         cursor = conn.cursor()
 
         cursor.execute("SELECT data FROM cache WHERE module=? AND key=?",
-                        ('urls', f'{source}_{data["songId"]}_{data["quality"]}'))
+                       (module, key))
 
         result = cursor.fetchone()
         if result:
             cache_data = json.loads(result[0])
-            if int(time.time()) < cache_data['expires']:
-                return {'message': 'success', 'code': 200, 'url': cache_data['url']}
+            if (not cache_data['expire']):
+                return cache_data
+            if (int(time.time()) < cache_data['time']):
+                return cache_data
     except:
         pass
         # traceback.print_exc()
-    finally:
-        # 关闭连接
-        conn.close()
-
     return False
 
 
 def updateCache(module, key, data):
     try:
         # 连接到数据库（如果数据库不存在，则会自动创建）
-        conn = variable.pool_cache.connection()
+        conn = get_cache_connection()
 
         # 创建一个游标对象
         cursor = conn.cursor()
@@ -240,7 +254,8 @@ def updateCache(module, key, data):
             if isinstance(cache_data, dict):
                 cache_data.update(data)
             else:
-                logger.error(f"Cache data for module '{module}' and key '{key}' is not a dictionary.")
+                logger.error(
+                    f"Cache data for module '{module}' and key '{key}' is not a dictionary.")
         else:
             cursor.execute(
                 "INSERT INTO cache (module, key, data) VALUES (?, ?, ?)", (module, key, json.dumps(data)))
@@ -249,9 +264,7 @@ def updateCache(module, key, data):
     except:
         logger.error('缓存写入遇到错误…')
         logger.error(traceback.format_exc())
-    finally:
-        # 关闭连接
-        conn.close()
+
 
 def resetRequestTime(ip):
     config_data = load_data()
@@ -280,6 +293,7 @@ def updateRequestTime(ip):
         logger.error('配置写入遇到错误...')
         logger.error(traceback.format_exc())
 
+
 def getRequestTime(ip):
     config_data = load_data()
     try:
@@ -287,6 +301,7 @@ def getRequestTime(ip):
     except:
         value = 0
     return value
+
 
 def read_data(key):
     config = load_data()
@@ -334,6 +349,7 @@ def push_to_list(key, obj):
 
     save_data(config)
 
+
 def read_config(key):
     config = variable.config
     keys = key.split('.')
@@ -350,6 +366,7 @@ def read_config(key):
             break
 
     return value
+
 
 def initConfig():
     try:
@@ -372,7 +389,8 @@ def initConfig():
     cursor = conn.cursor()
 
     # 创建一个表来存储缓存数据
-    cursor.execute(readfile(variable.workdir + '/common/sql/create_cache_db.sql'))
+    cursor.execute(readfile(variable.workdir +
+                   '/common/sql/create_cache_db.sql'))
 
     conn.close()
 
@@ -381,42 +399,34 @@ def initConfig():
     # 创建一个游标对象
     cursor2 = conn2.cursor()
 
-    cursor2.execute(readfile(variable.workdir + '/common/sql/create_data_db.sql'))
+    cursor2.execute(readfile(variable.workdir +
+                    '/common/sql/create_data_db.sql'))
 
     conn2.close()
 
-    variable.pool_data = PooledDB(
-        creator=sqlite3,
-        database='data.db',
-        maxconnections=10  # 设置最大连接数
-    )
-
-    variable.pool_cache = PooledDB(
-        creator=sqlite3,
-        database='cache.db',
-        maxconnections=10  # 设置最大连接数
-    )
-
     logger.debug('数据库初始化成功')
 
-    if (load_data == {}):
+    # print
+    if (load_data() == {}):
         write_data('banList', [])
         write_data('requestTime', {})
         logger.debug('数据库内容为空，已写入默认值')
 
-def ban_ip(ip_addr, ban_time = -1):
+
+def ban_ip(ip_addr, ban_time=-1):
     if read_config('security.banlist.enable'):
         banList = read_data('banList')
         banList.append({
-            'ip': ip_addr, 
-            'expire': read_config('security.banlist.expire.enable'), 
+            'ip': ip_addr,
+            'expire': read_config('security.banlist.expire.enable'),
             'expire_time': read_config('security.banlist.expire.length') if (ban_time == -1) else ban_time,
-            })
+        })
         write_data('banList', banList)
     else:
         if (variable.banList_suggest < 10):
             variable.banList_suggest += 1
             logger.warning('黑名单功能已被关闭，我们墙裂建议你开启这个功能以防止恶意请求')
+
 
 def check_ip_banned(ip_addr):
     if read_config('security.banlist.enable'):

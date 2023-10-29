@@ -12,7 +12,7 @@ import os
 
 
 debug_mode = True
-log_length_limit = 500
+log_length_limit = 50000000
 running = True
 config = {}
 pool_data = None

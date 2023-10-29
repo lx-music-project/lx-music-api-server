@@ -79,10 +79,10 @@ def request(url, options = {}):
     logger.debug(f'HTTP Request: {url}\noptions: {options}')
     # 转换body/form参数为原生的data参数，并为form请求追加Content-Type头
     if (method == 'POST') or (method == 'PUT'):
-        if options['body']:
+        if options.get('body'):
             options['data'] = options['body']
             options.pop('body')
-        if options['form']:
+        if options.get('form'):
             options['data'] = convert_dict_to_form_string(options['form'])
             options.pop('form')
             options['headers']['Content-Type'] = 'application/x-www-form-urlencoded'

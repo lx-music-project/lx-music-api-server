@@ -57,4 +57,10 @@ def _500(_):
 def _404(_):
     return utils.format_dict_json({'code': 6, 'msg': '未找到您所请求的资源', 'data': None}), 404
 
+@app.before_request
+def check():
+    if config.check_ip_banned(request.remote_addr):
+        return utils.format_dict_json({"code": 1, "msg": "您的IP已被封禁", "data": None}), 403
+    config.updateRequestTime(request.remote_addr)
+
 app.run(host=config.read_config('common.host'), port=config.read_config('common.port'))
