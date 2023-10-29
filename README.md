@@ -1,7 +1,5 @@
 # lx-music-api-server
-LX Music非官方测试接口服务器实现
-
-# 开发中...
+LX Music非官方测试接口服务器实现（需自行写源）
 
 ### 返回码说明
 body.code：  
