@@ -12,6 +12,7 @@ from common.utils import require
 from common.exceptions import FailedException
 from . import kw
 from . import mg
+from . import kg
 
 
 async def SongURL(source, songId, quality):
@@ -20,7 +21,7 @@ async def SongURL(source, songId, quality):
         return {
             'code': 0,
             'msg': 'success',
-            'data': func(songId, quality),
+            'data': await func(songId, quality),
         }
     except FailedException as e:
         return {

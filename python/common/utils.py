@@ -62,6 +62,7 @@ def sanitize_filename(filename):
 
 def md5(s: str):
     # 计算md5
+    # print(s)
     return _md5(s.encode("utf-8")).hexdigest()
 
 def readfile(path, mode = "text"):
@@ -100,13 +101,13 @@ def merge_dict(dict1, dict2):
     merged_dict.update(dict1)
     return merged_dict
 
-class object(dict):
+class jsobject(dict):
     def __init__(self, d):
         super().__init__(d)
         self._raw = d
         for key, value in d.items():
             if isinstance(value, dict):
-                setattr(self, key, object(value))
+                setattr(self, key, jsobject(value))
             else:
                 setattr(self, key, value)
 
@@ -118,9 +119,12 @@ class object(dict):
     def to_dict(self):
         result = {}
         for key, value in self.items():
-            if isinstance(value, object):
+            if isinstance(value, jsobject):
                 result[key] = value.to_dict()
             else:
                 result[key] = value
         return result
+
+    def __getattr__(self, UNUSED):
+        return None
 
