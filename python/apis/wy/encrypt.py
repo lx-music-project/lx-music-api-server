@@ -60,7 +60,7 @@ def eapiEncrypt(url, text):
     text = str(text)
     digest = MD5("nobody{}use{}md5forencrypt".format(url, text))
     data = "{}-36cd479b6b5-{}-36cd479b6b5-{}".format(url, text, digest)
-    return {"params": aes(data.encode(), EAPIKEY)}
+    return {"params": aes(data.encode(), EAPIKEY).decode("utf-8")}
 
 
 def aes(text, key, method={}):

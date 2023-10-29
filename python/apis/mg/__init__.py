@@ -47,5 +47,4 @@ async def url(songId, quality):
             raise FailedException('failed')
         return body['data']['url'].split('?')[0]
     except:
-        traceback.print_exc()
         raise FailedException('failed')

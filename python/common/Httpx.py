@@ -8,6 +8,8 @@
 # This file is part of the "lx-music-api-server" project.
 # Do not edit except you know what you are doing.
 
+import aiohttp
+import asyncio
 import requests
 import random
 import traceback
@@ -108,4 +110,75 @@ def request(url, options = {}):
         except:
             logger.debug(zlib.decompress(req.content).decode("utf-8") if is_valid_utf8(zlib.decompress(req.content).decode("utf-8")) and is_plain_text(zlib.decompress(req.content).decode("utf-8")) else binascii.hexlify(zlib.decompress(req.content)))
     # 返回请求
+    return req
+
+async def asyncrequest(url, options={}):
+    '''
+     - Asynchronous HTTP request function used for sending network requests
+     - url: URL address to be requested (required)
+     - options: Configuration parameters for the request (optional, defaults to GET request)
+       - method: Request method
+       - headers: Request headers
+       - body: Request body (can also use the native 'data' parameter of the 'requests' library)
+       - form: Submitted form data
+    
+     @ return: aiohttp.ClientResponse type response data
+    '''
+    # Get the request method, defaulting to GET if not provided
+    try:
+        method = options['method']
+        options.pop('method')
+    except KeyError:
+        method = 'GET'
+    # Get the User-Agent, choose randomly from ua_list if not present
+    try:
+        d_lower = {k.lower(): v for k, v in options['headers'].items()}
+        useragent = d_lower['user-agent']
+    except KeyError:
+        try:
+            options['headers']['User-Agent'] = random.choice(ua_list)
+        except:
+            options['headers'] = {}
+            options['headers']['User-Agent'] = random.choice(ua_list)
+    # Get the request function
+    try:
+        reqattr = getattr(aiohttp.ClientSession(), method.lower())
+    except AttributeError:
+        raise AttributeError('Unsupported method: ' + method)
+    # Log before the request
+    logger.debug(f'HTTP Request: {url}\noptions: {options}')
+    # Convert body/form parameter to native 'data' parameter and add 'Content-Type' header for form requests
+    if method in ['POST', 'PUT']:
+        if options.get('body'):
+            options['data'] = options['body']
+            options.pop('body')
+        if options.get('form'):
+            options['data'] = convert_dict_to_form_string(options['form'])
+            options.pop('form')
+            options['headers']['Content-Type'] = 'application/x-www-form-urlencoded'
+    # Send the request
+    try:
+        async with reqattr(url, **options) as req:
+            res = await req.read()
+    except Exception as e:
+        logger.error(f'HTTP Request runs into an Error: {traceback.format_exc()}')
+        raise e
+    # Log after the request
+    logger.debug(f'Request to {url} succeed with code {req.status}')
+    # Log the response data
+    try:
+        logger.debug(json.loads(res.decode("utf-8")))
+    except:
+        try:
+            logger.debug(json.loads(zlib.decompress(res).decode("utf-8")))
+        except zlib.error:
+            if is_valid_utf8(req.text) and is_plain_text(req.text):
+                logger.debug(req.text)
+            else:
+                logger.debug(binascii.hexlify(res))
+        except:
+            logger.debug(
+                zlib.decompress(res).decode("utf-8") if is_valid_utf8(zlib.decompress(res).decode("utf-8")) and is_plain_text(
+                    zlib.decompress(res).decode("utf-8")) else binascii.hexlify(zlib.decompress(res)))
+    # Return the response
     return req

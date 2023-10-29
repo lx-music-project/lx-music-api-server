@@ -59,8 +59,13 @@ def _404(_):
 
 @app.before_request
 def check():
-    if config.check_ip_banned(request.remote_addr):
+    if (config.check_ip_banned(request.remote_addr)):
         return utils.format_dict_json({"code": 1, "msg": "您的IP已被封禁", "data": None}), 403
     config.updateRequestTime(request.remote_addr)
+    if (config.read_config("security.allowed_host.enable")):
+        if request.remote_host.split(":")[0] not in config.read_config("security.allowed_host.list"):
+            if config.read_config("security.allowed_host.blacklist.enable"):
+                config.ban_ip(request.remote_addr, int(config.read_config("security.allowed_host.blacklist.length")))
+            return utils.format_dict_json({'code': 6, 'msg': '未找到您所请求的资源', 'data': None}), 404
 
 app.run(host=config.read_config('common.host'), port=config.read_config('common.port'))

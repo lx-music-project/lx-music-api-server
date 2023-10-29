@@ -75,9 +75,11 @@ class log:
         self.debug_.setLevel(logging.DEBUG)
 
     def debug(self, message, allow_hidden = True):
-        if "\n" in message and self.module_name == "pywsgi":
+        if self.module_name == "flask" and "\n" in message:
+            if message.startswith("Error"):
+                return self._logger.error(message)
             for m in message.split("\n"):
-                if m.startswith("WARNING"):
+                if "WARNING" in m:
                     self._logger.warning(m)
                 else:
                     self._logger.info(m)
@@ -87,9 +89,11 @@ class log:
         self._logger.debug(message)
 
     def log(self, message, allow_hidden = True):
-        if "\n" in message and self.module_name == "pywsgi":
+        if self.module_name == "flask" and "\n" in message:
+            if message.startswith("Error"):
+                return self._logger.error(message)
             for m in message.split("\n"):
-                if m.startswith("WARNING"):
+                if "WARNING" in m:
                     self._logger.warning(m)
                 else:
                     self._logger.info(m)
@@ -99,9 +103,11 @@ class log:
         self._logger.info(message)
 
     def info(self, message, allow_hidden = True):
-        if "\n" in message and self.module_name == "pywsgi":
+        if self.module_name == "flask" and "\n" in message:
+            if message.startswith("Error"):
+                return self._logger.error(message)
             for m in message.split("\n"):
-                if m.startswith("WARNING"):
+                if "WARNING" in m:
                     self._logger.warning(m)
                 else:
                     self._logger.info(m)
