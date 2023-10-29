@@ -21,7 +21,7 @@ statuscode:
 
 ### 项目协议
 
-本项目基于 [MIT](https://github.com/lxmusucs/lx-music-api-server/blob/main/LICENSE) 许可证发行，以下协议是对于MIT原协议的补充，如有冲突，以以下协议为准。
+本项目基于 [MIT](https://github.com/lxmusics/lx-music-api-server/blob/main/LICENSE) 许可证发行，以下协议是对于MIT原协议的补充，如有冲突，以以下协议为准。
 
 词语约定：本协议中的“本项目”指本音源项目；“使用者”指签署本协议的使用者；“官方音乐平台”指对本项目内置的包括酷我、酷狗、咪咕等音乐源的官方平台统称；“版权数据”指包括但不限于图像、音频、名字等在内的他人拥有所属版权的数据。
 
