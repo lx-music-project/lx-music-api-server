@@ -34,7 +34,7 @@ statuscode:
 
 音乐平台不易，请尊重版权，支持正版。<br>
 本项目仅用于对技术可行性的探索及研究，不接受任何商业（包括但不限于广告等）合作及捐赠。<br>
-若对此有疑问请 mail to: 
+若对此有疑问请 mail to:  
 helloplhm-qwq+outlook.com  
 folltoshe+foxmail.com  
  (请将`+`替换成`@`)<br>
