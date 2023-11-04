@@ -112,6 +112,7 @@ def request(url, options = {}):
     # 返回请求
     return req
 
+"""
 async def asyncrequest(url, options={}):
     '''
      - Asynchronous HTTP request function used for sending network requests
@@ -182,3 +183,5 @@ async def asyncrequest(url, options={}):
                     zlib.decompress(res).decode("utf-8")) else binascii.hexlify(zlib.decompress(res)))
     # Return the response
     return req
+    
+"""
