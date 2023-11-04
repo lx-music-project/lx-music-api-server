@@ -26,3 +26,6 @@ data.db
 logs
 config.json
 *.log
+
+# VSCode
+.history
