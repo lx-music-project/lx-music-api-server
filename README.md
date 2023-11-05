@@ -3,8 +3,26 @@
 LX Music非官方测试接口服务器实现（需自行写源）
 
 ## 还在开发中
+**主开发是高一住校学生，只有周末有时间回复，也欢迎所有人来贡献代码，我们在这里万分感谢**  
+**由于项目不够完善，更新后可能会导致config模块报错，之后有时间再修，目前的解决方法是删掉config.json然后让项目重新创建，账号配置自己备份吧**  
 
 ## 使用此项目导致的封号等情况与开发者无关
+
+## 部署方法
+**目前只有Python版本可供使用**  
+环境要求：Python 3.8+  
+没有其他限制，能用Python理论上就能跑起来  
+
+测试版本部署，linux命令如果为python3请自行替换：  
+
+```bash
+git clone https://github.com/lxmusics/lx-music-api-server.git # clone本项目
+cd python # 后期可能会有nodejs版
+python -m pip install -r ./requirements.txt # 安装依赖
+python main.py # 启动服务
+```
+
+对于release的部署和上方类似，这里不再赘述  
 
 ### 返回码说明
 
