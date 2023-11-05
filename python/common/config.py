@@ -59,7 +59,7 @@ default = {
             "127.0.0.1",
         ],
         "_whitelist_host-desc": "强制白名单HOST，不需要加端口号（即不受其他安全设置影响的HOST）",
-        "check_lxm": True,
+        "check_lxm": False,
         "_check_lxm-desc": "是否检查lxm请求头（正常的LX Music请求时都会携带这个请求头）",
         "lxm_ban": True,
         "_lxm_ban-desc": "lxm请求头不存在或不匹配时是否将用户IP加入黑名单",
