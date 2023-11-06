@@ -37,9 +37,9 @@ def index():
 
 @app.route('/<method>/<source>/<songId>/<quality>')
 async def handle(method, source, songId, quality):
-    if (config.read_config("security.key.enable")  and request.host.split(':')[0] not in config.read_config('security.whitelist_host')):
-        if (request.headers.get("X-Request-Key") != config.read_config("security.key.value"):
-            if (config.read_config("security.key.ban"):
+    if (config.read_config("security.key.enable") and request.host.split(':')[0] not in config.read_config('security.whitelist_host')):
+        if (request.headers.get("X-Request-Key")) != config.read_config("security.key.value"):
+            if (config.read_config("security.key.ban")):
                 config.ban_ip(request.remote_addr)
             return utils.format_dict_json({"code": 1, "msg": "key验证失败", "data": None}), 403
     if (config.read_config('security.check_lxm.enable') and request.host.split(':')[0] not in config.read_config('security.whitelist_host')):
