@@ -64,6 +64,6 @@ on(EVENT_NAMES.request, ({
 });
 send(EVENT_NAMES.inited, {
 	status: !0,
-	openDevTools: !0,
+	openDevTools: !1,
 	sources: si
 });
