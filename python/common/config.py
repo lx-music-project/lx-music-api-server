@@ -58,7 +58,7 @@ default = {
             "_enable-desc": "是否开启请求key，开启后只有请求头中包含key，且值一样时可以访问API",
             "ban": True,
             "value": "114514",
-        }
+        },
         "whitelist_host": [
             "localhost",
             "0.0.0.0",
@@ -395,8 +395,7 @@ def initConfig():
     cursor = conn.cursor()
 
     # 创建一个表来存储缓存数据
-    cursor.execute(readfile(variable.workdir +
-                   '/common/sql/create_cache_db.sql'))
+    cursor.execute(readfile(os.path.join(variable.workdir, 'common/sql/create_cache_db.sql')))
 
     conn.close()
 
