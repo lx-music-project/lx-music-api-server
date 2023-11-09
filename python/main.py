@@ -35,11 +35,11 @@ require = utils.require
 def index():
     return utils.format_dict_json({"code": 0, "msg": "success", "data": None}), 200
 
-@app.route('/<method>/<source>/<songId>/<quality>')
-async def handle(method, source, songId, quality):
+@app.route('/<source>/<songId>/<quality>')
+async def handle(source, songId, quality):
     if (config.read_config("security.key.enable")  and request.host.split(':')[0] not in config.read_config('security.whitelist_host')):
-        if (request.headers.get("X-Request-Key") != config.read_config("security.key.value"):
-            if (config.read_config("security.key.ban"):
+        if (request.headers.get("X-Request-Key") != config.read_config("security.key.value")):
+            if (config.read_config("security.key.ban")):
                 config.ban_ip(request.remote_addr)
             return utils.format_dict_json({"code": 1, "msg": "key验证失败", "data": None}), 403
     if (config.read_config('security.check_lxm.enable') and request.host.split(':')[0] not in config.read_config('security.whitelist_host')):
@@ -48,7 +48,9 @@ async def handle(method, source, songId, quality):
             if (config.read_config('security.lxm_ban.enable')):
                 config.ban_ip(request.remote_addr)
         return utils.format_dict_json({"code": 1, "msg": "lxm请求头验证失败", "data": None}), 403
-    
+    method = 'url'
+    if songId == 'undefined':
+        return utils.format_dict_json({'code': 6, 'msg': 'songId未定义: ' + songId, 'data': None}), 400
     if method == 'url':
         return utils.format_dict_json(await SongURL(source, songId, quality))
     else:
