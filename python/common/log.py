@@ -52,15 +52,15 @@ class log:
             })
         file_formatter = logging.Formatter(
             '%(asctime)s|[%(name)s/%(levelname)s]|%(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S'
+            datefmt='%Y-%m-%d %H:%M:%S',
             )
         if filename:
             filename = sanitize_filename(filename)
         else:
             filename = './logs/' + module_name + '.log'
-        file_handler = logging.FileHandler(filename)
+        file_handler = logging.FileHandler(filename, encoding='utf-8')
         file_handler.setFormatter(file_formatter)
-        file_handler_ = logging.FileHandler("./logs/console_full.log")
+        file_handler_ = logging.FileHandler("./logs/console_full.log", encoding='utf-8')
         file_handler_.setFormatter(file_formatter)
         self._logger.addHandler(file_handler_)
         self._logger.addHandler(file_handler)
