@@ -40,7 +40,7 @@ const httpFetch = (url, options = { method: 'GET' }) => {
 const handleGetMusicUrl = async (source, musicInfo, quality) => {
   const songId = musicInfo.hash ?? musicInfo.songid
 
-  const request = await httpFetch(`${API_URL}/${source}/${songId}/${quality}`, {
+  const request = await httpFetch(`${API_URL}/url/${source}/${songId}/${quality}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -51,13 +51,13 @@ const handleGetMusicUrl = async (source, musicInfo, quality) => {
   const { body } = request
 
   if (!body || !body.code) throw new Error('unknow error')
-  if (body.code === 200) return body.data
+  if (body.code === 0) return body.data
 
   switch (body.code) {
     case 1:
       throw new Error('block ip')
     case 2:
-      throw new Error('get music url faild')
+      throw new Error('get music url failed')
     case 4:
       throw new Error('internal server error')
     case 5:
@@ -65,7 +65,7 @@ const handleGetMusicUrl = async (source, musicInfo, quality) => {
     case 5:
       throw new Error('param error')
     default:
-      throw new Error(body.message ?? 'unknow error')
+      throw new Error(body.msg ?? 'unknow error')
   }
 }
 
