@@ -17,7 +17,7 @@ const API_KEY = ''
 const MUSIC_QUALITY = {
   kw: ['128k', '320k', 'flac'],
   kg: ['128k'],
-  tx: ['128k', '320k'],
+  tx: ['128k'],
   wy: ['128k'],
   mg: ['128k'],
 }
