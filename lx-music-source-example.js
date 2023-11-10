@@ -7,12 +7,12 @@
  */
 
 // 是否开启开发模式
-const DEV_ENABLE = false
+const DEV_ENABLE = true
 // 服务端地址
-const API_URL = 'http://xxx.com'
+const API_URL = 'http://127.0.0.1:9763'
 // 服务端配置的请求key
 const API_KEY = ''
-// 音质配置(key为音源名称,不要乱填.音质如果你账号为VIP可以填写到hires)
+// 音质配置(key为音源名称,不要乱填.如果你账号为VIP可以填写到hires)
 const MUSIC_QUALITY = {
   kw: ['128k'],
   kg: ['128k'],
@@ -26,7 +26,7 @@ const MUSIC_SOURCE = Object.keys(MUSIC_QUALITY)
 /**
  * 下面的东西就不要修改了
  */
-const { EVENT_NAMES, request, on, send, utils, env } = globalThis.lx
+const { EVENT_NAMES, request, on, send, utils, env, version } = globalThis.lx
 
 const httpFetch = (url, options = { method: 'GET' }) => {
   return new Promise((resolve, reject) => {
@@ -38,22 +38,23 @@ const httpFetch = (url, options = { method: 'GET' }) => {
 }
 
 const handleGetMusicUrl = async (source, musicInfo, quality) => {
-  const songId = musicInfo.hash ?? musicInfo.songid
+  const songId = musicInfo.hash ?? musicInfo.songmid
 
-  const request = await httpFetch(`${API_URL}/${source}/${songId}/${quality}`, {
+  const request = await httpFetch(`${API_URL}/url/${source}/${songId}/${quality}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'User-Agent': `${env ? `lx music ${env} request` : 'lx music request'}`,
+      'User-Agent': `${env ? `lx-music-${env}/${version}` : `lx-usic-request/${version}`}`,
       'X-Request-Key': API_KEY,
     },
   })
   const { body } = request
 
-  if (!body || !body.code) throw new Error('unknow error')
-  if (body.code === 200) return body.data
+  if (!body || isNaN(Number(body.code))) throw new Error('unknow error')
 
   switch (body.code) {
+    case 0:
+      return body.data
     case 1:
       throw new Error('block ip')
     case 2:
@@ -65,21 +66,21 @@ const handleGetMusicUrl = async (source, musicInfo, quality) => {
     case 5:
       throw new Error('param error')
     default:
-      throw new Error(body.message ?? 'unknow error')
+      throw new Error(body.msg ?? 'unknow error')
   }
 }
 
-const musicSources = []
+const musicSources = {}
 MUSIC_SOURCE.forEach(item => {
-  musicSources.push({
+  musicSources[item] = {
     name: item,
     type: 'music',
     actions: ['musicUrl'],
     qualitys: MUSIC_QUALITY[item],
-  })
+  }
 })
 
-on(EVENT_NAMES.request, ({ source, info: m }) => {
+on(EVENT_NAMES.request, ({ action, source, info }) => {
   switch (action) {
     case 'musicUrl':
       console.group(`Handle Action(musicUrl)`)
@@ -88,7 +89,7 @@ on(EVENT_NAMES.request, ({ source, info: m }) => {
       console.log('musicInfo', info.musicInfo)
       console.groupEnd()
       return handleGetMusicUrl(source, info.musicInfo, info.type)
-        .then(url => Promise.resolve(url))
+        .then(data => Promise.resolve(data))
         .catch(err => Promise.reject(err))
     default:
       console.error(`action(${action}) not support`)
