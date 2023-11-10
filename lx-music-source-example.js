@@ -83,11 +83,18 @@ MUSIC_SOURCE.forEach(item => {
 on(EVENT_NAMES.request, ({ action, source, info }) => {
   switch (action) {
     case 'musicUrl':
-      console.group(`Handle Action(musicUrl)`)
-      console.log('source', source)
-      console.log('quality', info.type)
-      console.log('musicInfo', info.musicInfo)
-      console.groupEnd()
+      if (env != "mobile") {
+        console.group(`Handle Action(musicUrl)`)
+        console.log('source', source)
+        console.log('quality', info.type)
+        console.log('musicInfo', info.musicInfo)
+        console.groupEnd()
+      } else {
+        console.log(`Handle Action(musicUrl)`)
+        console.log('source', source)
+        console.log('quality', info.type)
+        console.log('musicInfo', info.musicInfo)
+      }
       return handleGetMusicUrl(source, info.musicInfo, info.type)
         .then(data => Promise.resolve(data))
         .catch(err => Promise.reject(err))
