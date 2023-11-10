@@ -38,33 +38,25 @@ const httpFetch = (url, options = { method: 'GET' }) => {
 }
 
 const handleGetMusicUrl = async (source, musicInfo, quality) => {
-  const songId = musicInfo.hash ?? musicInfo.songid
+  const songId = musicInfo.hash || musicInfo.copyrightId || musicInfo.songmid || musicInfo.songid
 
-  const request = await httpFetch(`${API_URL}/url/${source}/${songId}/${quality}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'User-Agent': `${env ? `lx music ${env} request` : 'lx music request'}`,
-      'X-Request-Key': API_KEY,
-    },
-  })
-  const { body } = request
+  try {
+    const request = await httpFetch(`${API_URL}/url/${source}/${songId}/${quality}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': `${env ? `lx music ${env} request` : 'lx music request'}`,
+        'X-Request-Key': API_KEY,
+      },
+    })
+    const { body, statusCode } = request
 
-  if (body.code === 0) return body.data
+    if (statusCode === 200 && body.code === 0) return body.data
 
-  switch (body.code) {
-    case 1:
-      throw new Error('block ip')
-    case 2:
-      throw new Error('get music url failed')
-    case 4:
-      throw new Error('internal server error')
-    case 5:
-      throw new Error('too many requests')
-    case 5:
-      throw new Error('param error')
-    default:
-      throw new Error(body.msg ?? 'unknow error')
+    throw new Error(body.msg ?? 'unknow error')
+  }
+  catch(error) {
+    throw new Error(error.message ?? 'unknow error')
   }
 }
 
