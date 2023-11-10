@@ -58,7 +58,7 @@ const handleGetMusicUrl = async (source, musicInfo, quality) => {
     case 1:
       throw new Error('block ip')
     case 2:
-      throw new Error('get music url faild')
+      throw new Error('get music url failed')
     case 4:
       throw new Error('internal server error')
     case 5:
