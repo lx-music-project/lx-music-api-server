@@ -13,12 +13,13 @@ const API_URL = 'http://127.0.0.1:9763'
 // 服务端配置的请求key
 const API_KEY = ''
 // 音质配置(key为音源名称,不要乱填.如果你账号为VIP可以填写到hires)
+// 全部的支持值: ['128k', '320k', 'flac', 'flac24bit']
 const MUSIC_QUALITY = {
   kw: ['128k', '320k', 'flac'],
   kg: ['128k'],
   tx: ['128k', '320k'],
   wy: ['128k'],
-  mg: ['128k', '320k', 'flac', 'flac24bit'],
+  mg: ['128k'],
 }
 // 音源配置(默认为自动生成,可以修改为手动)
 const MUSIC_SOURCE = Object.keys(MUSIC_QUALITY)
