@@ -50,7 +50,6 @@ const handleGetMusicUrl = async (source, musicInfo, quality) => {
   })
   const { body } = request
 
-  if (!body || !body.code) throw new Error('unknow error')
   if (body.code === 0) return body.data
 
   switch (body.code) {
