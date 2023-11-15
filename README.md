@@ -8,7 +8,11 @@
 
 [Node 版](https://github.com/lxmusics/lx-music-api-server-node)
 
-### 项目协议
+## 交流群
+
+206995059
+
+## 项目协议
 
 本项目基于 [MIT](https://github.com/lxmusics/lx-music-api-server/blob/main/LICENSE) 许可证发行，以下协议是对于 MIT 原协议的补充，如有冲突，以以下协议为准。
 
