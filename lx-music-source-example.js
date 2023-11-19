@@ -64,7 +64,7 @@ const handleGetMusicUrl = async (source, musicInfo, quality) => {
       throw new Error('internal server error')
     case 5:
       throw new Error('too many requests')
-    case 5:
+    case 6:
       throw new Error('param error')
     default:
       throw new Error(body.msg ?? 'unknow error')
