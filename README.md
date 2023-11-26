@@ -11,7 +11,6 @@
 ## 交流群
 
 [206995059](https://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=117h8X7TPBWMLwK0Nec_TkdFpqsSs7LJ&group_code=206995059)  
-入群答案：lx-music-api-server
 
 ## 项目协议
 
