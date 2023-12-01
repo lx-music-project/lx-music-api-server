@@ -6,7 +6,7 @@
 
 [Python 版](https://github.com/lxmusics/lx-music-api-server-python)
 
-[Node 版](https://github.com/lxmusics/lx-music-api-server-node)
+[Node 版(未完成)](https://github.com/lxmusics/lx-music-api-server-node)
 
 ## 交流群
 
