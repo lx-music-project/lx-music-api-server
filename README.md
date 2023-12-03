@@ -12,6 +12,13 @@
 
 [206995059](https://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=117h8X7TPBWMLwK0Nec_TkdFpqsSs7LJ&group_code=206995059)  
 
+## 使用音源
+1. 搭建服务器，并按照要求进行配置
+2. 下载项目目录下的`lx-music-source-example.js`文件
+3. 打开你下载的`lx-music-source-example.js`，修改脚本中的API_URL和API_KEY为你自己搭建的或者你从别处获取的
+4. 保存文件，将这个JS文件导入LX Music中
+5. 享受畅快的听歌之旅
+
 ## 项目协议
 
 本项目基于 [MIT](https://github.com/lxmusics/lx-music-api-server/blob/main/LICENSE) 许可证发行，以下协议是对于 MIT 原协议的补充，如有冲突，以以下协议为准。
