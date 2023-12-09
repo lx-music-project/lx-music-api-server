@@ -1,6 +1,10 @@
-# lx-music-api-server
+<div align="center">
+
+![lx-music-api-server-python](https://socialify.git.ci/lxmusics/lx-music-api-server/image?description=1&font=Inter&forks=1&issues=1&language=1&name=1&owner=1&pulls=1&stargazers=1&theme=Auto)
 
 **本项目已经迁移，地址见下面链接**
+
+</div>
 
 ## 仓库地址
 
