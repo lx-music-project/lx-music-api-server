@@ -22,7 +22,7 @@
 
 ### Telegram
 
-[点击添加](https://t.me/+zBJAaMgr6yZmYWI9)
+[点击添加](https://t.me/LXMusicApi)
 
 ## 使用音源
 1. 搭建服务器，并按照要求进行配置
