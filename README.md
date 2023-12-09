@@ -10,7 +10,15 @@
 
 ## 交流群
 
-[206995059](https://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=117h8X7TPBWMLwK0Nec_TkdFpqsSs7LJ&group_code=206995059)  
+### QQ
+
+群号: 206995059
+
+[点击添加](https://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=117h8X7TPBWMLwK0Nec_TkdFpqsSs7LJ&group_code=206995059)  
+
+### Telegram
+
+[点击添加](https://t.me/+zBJAaMgr6yZmYWI9)
 
 ## 使用音源
 1. 搭建服务器，并按照要求进行配置
