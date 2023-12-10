@@ -55,7 +55,9 @@ const handleGetMusicUrl = async (source, musicInfo, quality) => {
 
   switch (body.code) {
     case 0:
-      return body.data
+      // 兼容最新版服务端
+      if (typeof body.data === 'string') return body.data
+      return body.data.url
     case 1:
       throw new Error('block ip')
     case 2:
@@ -84,7 +86,7 @@ MUSIC_SOURCE.forEach(item => {
 on(EVENT_NAMES.request, ({ action, source, info }) => {
   switch (action) {
     case 'musicUrl':
-      if (env != "mobile") {
+      if (env != 'mobile') {
         console.group(`Handle Action(musicUrl)`)
         console.log('source', source)
         console.log('quality', info.type)
