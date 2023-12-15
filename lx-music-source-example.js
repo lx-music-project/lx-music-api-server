@@ -1,7 +1,7 @@
 /*!
  * @name 替换为你的音乐源名称
  * @description 替换为你的音乐源介绍
- * @version v1.0.1
+ * @version v1.1.0
  * @author Folltoshe & helloplhm-qwq
  * @repository https://github.com/lxmusics/lx-music-api-server
  */
@@ -55,9 +55,7 @@ const handleGetMusicUrl = async (source, musicInfo, quality) => {
 
   switch (body.code) {
     case 0:
-      // 兼容最新版服务端
-      if (typeof body.data === 'string') return body.data
-      return body.data.url
+      return body.data
     case 1:
       throw new Error('block ip')
     case 2:
