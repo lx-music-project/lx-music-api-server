@@ -31,8 +31,10 @@ const { EVENT_NAMES, request, on, send, utils, env, version } = globalThis.lx
 
 const httpFetch = (url, options = { method: 'GET' }) => {
   return new Promise((resolve, reject) => {
+    console.log('--- start --- ' + url)
     request(url, options, (err, resp) => {
       if (err) return reject(err)
+      console.log('API Response: ', resp)
       resolve(resp)
     })
   })
@@ -45,16 +47,17 @@ const handleGetMusicUrl = async (source, musicInfo, quality) => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'User-Agent': `${env ? `lx-music-${env}/${version}` : `lx-usic-request/${version}`}`,
+      'User-Agent': `${env ? `lx-music-${env}/${version}` : `lx-music-request/${version}`}`,
       'X-Request-Key': API_KEY,
     },
   })
   const { body } = request
 
   if (!body || isNaN(Number(body.code))) throw new Error('unknow error')
-
+  
   switch (body.code) {
     case 0:
+      console.log(`handleGetMusicUrl(${source}_${musicInfo.songmid}, ${quality}) success, URL: ${body.data}`)
       return body.data
     case 1:
       throw new Error('block ip')
