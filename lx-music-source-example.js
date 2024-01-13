@@ -15,7 +15,7 @@ const API_KEY = ''
 // 音质配置(key为音源名称,不要乱填.如果你账号为VIP可以填写到hires)
 // 全部的支持值: ['128k', '320k', 'flac', 'flac24bit']
 const MUSIC_QUALITY = {
-  kw: ['128k', '320k', 'flac'],
+  kw: ['128k'],
   kg: ['128k'],
   tx: ['128k'],
   wy: ['128k'],
@@ -29,6 +29,13 @@ const MUSIC_SOURCE = Object.keys(MUSIC_QUALITY)
  */
 const { EVENT_NAMES, request, on, send, utils, env, version } = globalThis.lx
 
+/**
+ * URL请求
+ *
+ * @param {string} url - 请求的地址
+ * @param {object} options - 请求的配置文件
+ * @return {Promise} 携带响应体的Promise对象
+ */
 const httpFetch = (url, options = { method: 'GET' }) => {
   return new Promise((resolve, reject) => {
     console.log('--- start --- ' + url)
@@ -40,6 +47,14 @@ const httpFetch = (url, options = { method: 'GET' }) => {
   })
 }
 
+/**
+ * 
+ * @param {string} source - 音源
+ * @param {object} musicInfo - 歌曲信息
+ * @param {string} quality - 音质
+ * @returns {Promise<string>} - 歌曲播放链接
+ * @throws {Error} - 错误消息
+ */
 const handleGetMusicUrl = async (source, musicInfo, quality) => {
   const songId = musicInfo.hash ?? musicInfo.songmid
 
@@ -50,30 +65,38 @@ const handleGetMusicUrl = async (source, musicInfo, quality) => {
       'User-Agent': `${env ? `lx-music-${env}/${version}` : `lx-music-request/${version}`}`,
       'X-Request-Key': API_KEY,
     },
+    follow_max: 5,
   })
   const { body } = request
 
   if (!body || isNaN(Number(body.code))) throw new Error('unknow error')
-  
+  if (env != 'modile') console.groupEnd()
   switch (body.code) {
     case 0:
       console.log(`handleGetMusicUrl(${source}_${musicInfo.songmid}, ${quality}) success, URL: ${body.data}`)
       return body.data
     case 1:
+      console.log(`handleGetMusicUrl(${source}_${musicInfo.songmid}, ${quality}) failed: ip被封禁`)
       throw new Error('block ip')
     case 2:
+      console.log(`handleGetMusicUrl(${source}_${musicInfo.songmid}, ${quality}) failed, ${body.msg}`)
       throw new Error('get music url failed')
     case 4:
+      console.log(`handleGetMusicUrl(${source}_${musicInfo.songmid}, ${quality}) failed, 远程服务器错误`)
       throw new Error('internal server error')
     case 5:
+      console.log(`handleGetMusicUrl(${source}_${musicInfo.songmid}, ${quality}) failed, 请求过于频繁，请休息一下吧`)
       throw new Error('too many requests')
     case 6:
+      console.log(`handleGetMusicUrl(${source}_${musicInfo.songmid}, ${quality}) failed, 请求参数错误`)
       throw new Error('param error')
     default:
+      console.log(`handleGetMusicUrl(${source}_${musicInfo.songmid}, ${quality}) failed, ${body.msg ? body.msg : 'unknow error'}`)
       throw new Error(body.msg ?? 'unknow error')
   }
 }
 
+// 生成歌曲信息
 const musicSources = {}
 MUSIC_SOURCE.forEach(item => {
   musicSources[item] = {
@@ -84,6 +107,7 @@ MUSIC_SOURCE.forEach(item => {
   }
 })
 
+// 监听 LX Music 请求事件
 on(EVENT_NAMES.request, ({ action, source, info }) => {
   switch (action) {
     case 'musicUrl':
@@ -92,7 +116,6 @@ on(EVENT_NAMES.request, ({ action, source, info }) => {
         console.log('source', source)
         console.log('quality', info.type)
         console.log('musicInfo', info.musicInfo)
-        console.groupEnd()
       } else {
         console.log(`Handle Action(musicUrl)`)
         console.log('source', source)
@@ -107,4 +130,6 @@ on(EVENT_NAMES.request, ({ action, source, info }) => {
       return Promise.reject('action not support')
   }
 })
+
+// 向 LX Music 发送初始化成功事件
 send(EVENT_NAMES.inited, { status: true, openDevTools: DEV_ENABLE, sources: musicSources })
