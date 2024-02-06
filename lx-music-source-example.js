@@ -109,7 +109,7 @@ const handleGetMusicUrl = async (source, musicInfo, quality) => {
   const { body } = request
 
   if (!body || isNaN(Number(body.code))) throw new Error('unknow error')
-  if (env != 'modile') console.groupEnd()
+  if (env != 'mobile') console.groupEnd()
   switch (body.code) {
     case 0:
       console.log(`handleGetMusicUrl(${source}_${musicInfo.songmid}, ${quality}) success, URL: ${body.data}`)
