@@ -55,7 +55,7 @@ const httpFetch = (url, options = { method: 'GET' }) => {
  * @return {string} the base64 encoded string
  */
 const handleBase64Encode = (data) => {
-  var data = utils.buffer.from(data)
+  var data = utils.buffer.from(data, 'utf-8')
   return utils.buffer.bufToString(data, 'base64')
 }
 
@@ -69,8 +69,8 @@ const handleBase64Encode = (data) => {
  */
 const handleGetMusicUrl = async (source, musicInfo, quality) => {
   if (source == 'local') {
-    if (!musicInfo.songId.startsWith('server_')) throw new Error('upsupported local file')
-    const songId = musicInfo.songId
+    if (!musicInfo.songmid.startsWith('server_')) throw new Error('upsupported local file')
+    const songId = musicInfo.songmid
     const requestBody = {
       p: songId.replace('server_', ''),
     }
@@ -139,8 +139,8 @@ const handleGetMusicPic = async (source, musicInfo) => {
   switch (source) {
     case 'local':
       // 先从服务器检查是否有对应的类型，再响应链接
-      if (!musicInfo.songId.startswith('server_')) throw new Error('upsupported local file')
-      const songId = musicInfo.songId
+      if (!musicInfo.songmid.startsWith('server_')) throw new Error('upsupported local file')
+      const songId = musicInfo.songmid
       const requestBody = {
         p: songId.replace('server_', ''),
       }
@@ -170,8 +170,8 @@ const handleGetMusicPic = async (source, musicInfo) => {
 const handleGetMusicLyric = async (source, musicInfo) => {
   switch (source) {
     case 'local':
-      if (!musicInfo.songId.startswith('server_')) throw new Error('upsupported local file')
-      const songId = musicInfo.songId
+      if (!musicInfo.songmid.startsWith('server_')) throw new Error('upsupported local file')
+      const songId = musicInfo.songmid
       const requestBody = {
         p: songId.replace('server_', ''),
       }
