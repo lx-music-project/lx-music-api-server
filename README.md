@@ -12,6 +12,8 @@
 
 [Node 版(未完成)](https://github.com/lxmusics/lx-music-api-server-node)
 
+一个他人维护的[Golang版本](https://github.com/ZxwyWebSite/lx-source)
+
 ## 交流群
 
 ### QQ
