@@ -10,8 +10,6 @@
 
 [Python 版](https://github.com/lxmusics/lx-music-api-server-python)
 
-[Node 版(未完成)](https://github.com/lxmusics/lx-music-api-server-node)
-
 一个他人维护的[Golang版本](https://github.com/ZxwyWebSite/lx-source)
 
 ## 交流群
@@ -50,5 +48,4 @@
 本项目仅用于对技术可行性的探索及研究，不接受任何商业（包括但不限于广告等）合作及捐赠。  
 若对此有疑问请 mail to:  
 helloplhm-qwq+outlook.com  
-folltoshe+foxmail.com  
 (请将`+`替换成`@`)
